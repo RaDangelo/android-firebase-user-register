@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "293736455152",
+    "firebase_url": "https://cadastrofotoutilizandofirebase.firebaseio.com",
+    "project_id": "cadastrofotoutilizandofirebase",
+    "storage_bucket": "cadastrofotoutilizandofirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:293736455152:android:b683d30acf6c1998",
+        "android_client_info": {
+          "package_name": "br.com.rafaeldangelobergami.cadastrofotoutilizandofirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "293736455152-ndej6rj9kan2f615tgo4t0vmpdfetp4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.rafaeldangelobergami.cadastrofotoutilizandofirebase",
+            "certificate_hash": "5f2bc5424680b66e5ecae36b8d3d4436bf0d5100"
+          }
+        },
+        {
+          "client_id": "293736455152-97s4r6v79on38qqvd3srt0tjv29vfjt2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPyi7G5S68_ZtwYTdNOLXb-GB3mz0V6Wo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "293736455152-97s4r6v79on38qqvd3srt0tjv29vfjt2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
