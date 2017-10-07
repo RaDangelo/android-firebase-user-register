@@ -1,6 +1,7 @@
 package br.com.rafaeldangelobergami.cadastrofotoutilizandofirebase;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +11,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView exibeFotoImageView;
 
     private FirebaseDatabase db;
+    StorageReference storageRootReference;
     DatabaseReference reference;
 
     @Override
@@ -46,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         });
         db = FirebaseDatabase.getInstance();
         reference = db.getReference("usuario");
+        storageRootReference = FirebaseStorage.getInstance().getReference();
+        baixarFoto();
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -61,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void baixarFoto() {
+        StorageReference fotoReference = storageRootReference.child("img/foto.png");
+        try {
+            File temp = File.createTempFile("img", "foto.png");
+            fotoReference.getFile(temp).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Usuario.getInstance().setFoto(BitmapFactory.decodeFile(temp.getPath()));
+                    Toast.makeText(MainActivity.this, getString (R.string.ok_baixou), Toast.LENGTH_SHORT)
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

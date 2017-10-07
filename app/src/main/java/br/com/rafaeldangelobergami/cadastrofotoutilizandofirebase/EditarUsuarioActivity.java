@@ -11,9 +11,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class EditarUsuarioActivity extends AppCompatActivity {
 
@@ -21,6 +29,7 @@ public class EditarUsuarioActivity extends AppCompatActivity {
     private ImageView fotoParaEdicaoImageView;
     private FirebaseDatabase db;
     private DatabaseReference reference;
+    private StorageReference storageRootReference;
     private static final int REQUISICAO_TIRAR_FOTO = 547;
 
     @Override
@@ -51,6 +60,17 @@ public class EditarUsuarioActivity extends AppCompatActivity {
         fotoParaEdicaoImageView = (ImageView) findViewById(R.id.fotoParaEdicaoImageView);
         db = FirebaseDatabase.getInstance();
         reference = db.getReference("usuario");
+        storageRootReference = FirebaseStorage.getInstance().getReference();
+        configurarComponentesVisuais();
+    }
+
+    private void configurarComponentesVisuais() {
+        nomeEditText.setText(Usuario.getInstance().getNome() != null ? Usuario.getInstance().getNome() : null);
+        foneEditText.setText(Usuario.getInstance().getFone() != null ? Usuario.getInstance().getFone() : null);
+        emailEditText.setText(Usuario.getInstance().getEmail() != null ? Usuario.getInstance().getEmail() : null);
+        if (Usuario.getInstance().getFoto() != null) {
+            fotoParaEdicaoImageView.setImageBitmap(Usuario.getInstance().getFoto());
+        }
     }
 
     public void tirarFoto(View view) {
@@ -65,6 +85,16 @@ public class EditarUsuarioActivity extends AppCompatActivity {
                 Bitmap foto = (Bitmap) data.getExtras().get("data");
                 Usuario.getInstance().setFoto(foto);
                 fotoParaEdicaoImageView.setImageBitmap(foto);
+                StorageReference fotoReference = storageRootReference.child("img/foto.png");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                foto.compress(Bitmap.CompressFormat.PNG, 0, baos);
+                byte [] fotoComprimida = baos.toByteArray();
+                fotoReference.putBytes(fotoComprimida).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(EditarUsuarioActivity.this, taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT);
+                    }
+                });
             }
         }
     }
